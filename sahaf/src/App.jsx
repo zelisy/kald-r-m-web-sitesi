@@ -5,7 +5,7 @@ import Categories from './components/Categories';
 import Authors from './components/Authors';
 import BlogPosts from './components/BlogPosts';
 import Contact from './components/Contact';
-import Admin from './components/Admin';
+import AdminPanel from './components/AdminPanel';
 import './App.css';
 
 const HomePage = () => {
@@ -84,7 +84,7 @@ function App() {
               <Route path="/yazarlar" element={<Authors />} />
               <Route path="/kose-yazilari" element={<BlogPosts />} />
               <Route path="/iletisim" element={<Contact />} />
-              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin" element={<AdminPanel />} />
             </Routes>
           </div>
         </main>
