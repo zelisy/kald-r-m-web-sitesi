@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +9,7 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,18 +19,32 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Form gönderme işlevi buraya eklenecek
-    console.log('Form gönderiliyor:', formData);
-    // Form gönderildikten sonra formu temizle
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
-    alert('Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.');
+    setIsSubmitting(true);
+    
+    try {
+      // Form verilerini Firebase'e kaydet
+      await addDoc(collection(db, 'messages'), {
+        ...formData,
+        timestamp: serverTimestamp(),
+        status: 'unread' // mesajın okunma durumu
+      });
+
+      // Form gönderildikten sonra formu temizle
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+      alert('Mesajınız başarıyla gönderildi. En kısa sürede size dönüş yapacağız.');
+    } catch (error) {
+      console.error('Mesaj gönderilirken hata oluştu:', error);
+      alert('Mesajınız gönderilirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = {
@@ -315,9 +332,12 @@ const Contact = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200"
+              disabled={isSubmitting}
+              className={`w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 ${
+                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              Gönder
+              {isSubmitting ? 'Gönderiliyor...' : 'Gönder'}
             </button>
           </form>
         </div>
