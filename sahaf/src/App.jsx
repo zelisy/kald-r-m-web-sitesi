@@ -9,6 +9,7 @@ import Contact from './components/Contact';
 import AdminPanel from './components/AdminPanel';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
+import Books from './components/Books';
 import './App.css';
 
 const HomePage = () => {
@@ -83,6 +84,7 @@ function App() {
           <div className="bg-white rounded-lg shadow-sm p-6 border border-blue-100">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/kitaplarimiz" element={<Books />} />
               <Route path="/kategoriler" element={<Categories />} />
               <Route path="/kategoriler/:categoryName" element={<CategoryDetail />} />
               <Route path="/yazarlar" element={<Authors />} />

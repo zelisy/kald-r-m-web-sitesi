@@ -3,13 +3,6 @@ import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // Arama işlevselliği buraya eklenecek
-    console.log('Arama yapılıyor:', searchQuery);
-  };
 
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50 border-b border-blue-100">
@@ -33,6 +26,9 @@ const Header = () => {
 
           {/* Navigasyon */}
           <nav className="hidden md:flex items-center space-x-8">
+            <Link to="/kitaplarimiz" className="text-blue-700 hover:text-blue-900 text-sm font-medium transition-colors duration-200">
+              Kitaplarımız
+            </Link>
             <Link to="/kategoriler" className="text-blue-700 hover:text-blue-900 text-sm font-medium transition-colors duration-200">
               Kategoriler
             </Link>
@@ -50,27 +46,6 @@ const Header = () => {
             </Link>
           </nav>
 
-          {/* Arama formu */}
-          <form onSubmit={handleSearch} className="hidden md:block flex-1 max-w-xs ml-8">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Kitap ara..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-2 text-sm rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent transition-all duration-200"
-              />
-              <button
-                type="submit"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-400 hover:text-blue-600 transition-colors duration-200"
-              >
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </button>
-            </div>
-          </form>
-
           {/* Mobil menü butonu */}
           <button 
             className="md:hidden p-2 rounded-lg text-blue-700 hover:text-blue-900 hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all duration-200"
@@ -86,6 +61,12 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden border-t border-blue-100 bg-white">
             <nav className="px-2 pt-2 pb-3 space-y-1">
+              <Link 
+                to="/kitaplarimiz" 
+                className="block px-4 py-2.5 rounded-lg text-base font-medium text-blue-700 hover:text-blue-900 hover:bg-blue-50 transition-colors duration-200"
+              >
+                Kitaplarımız
+              </Link>
               <Link 
                 to="/kategoriler" 
                 className="block px-4 py-2.5 rounded-lg text-base font-medium text-blue-700 hover:text-blue-900 hover:bg-blue-50 transition-colors duration-200"
@@ -116,25 +97,6 @@ const Header = () => {
               >
                 Yönetim
               </Link>
-              <form onSubmit={handleSearch} className="px-4 py-2">
-                <div className="relative">
-                  <input
-                    type="text"
-                    placeholder="Kitap ara..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full px-4 py-2 text-sm rounded-lg border border-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-transparent transition-all duration-200"
-                  />
-                  <button
-                    type="submit"
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-blue-400 hover:text-blue-600 transition-colors duration-200"
-                  >
-                    <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </form>
             </nav>
           </div>
         )}
