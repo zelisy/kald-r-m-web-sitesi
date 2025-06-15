@@ -1,6 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import Categories from './components/Categories';
+import Authors from './components/Authors';
+import BlogPosts from './components/BlogPosts';
+import Contact from './components/Contact';
+import Admin from './components/Admin';
 import './App.css';
 
 const HomePage = () => {
@@ -75,11 +80,11 @@ function App() {
           <div className="bg-white rounded-lg shadow-sm p-6 border border-blue-100">
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/kategoriler" element={<div className="min-h-[60vh] text-gray-800">Kategoriler Sayfası</div>} />
-              <Route path="/yazarlar" element={<div className="min-h-[60vh] text-gray-800">Yazarlar Sayfası</div>} />
-              <Route path="/kose-yazilari" element={<div className="min-h-[60vh] text-gray-800">Köşe Yazıları Sayfası</div>} />
-              <Route path="/hakkimizda" element={<div className="min-h-[60vh] text-gray-800">Hakkımızda Sayfası</div>} />
-              <Route path="/iletisim" element={<div className="min-h-[60vh] text-gray-800">İletişim Sayfası</div>} />
+              <Route path="/kategoriler" element={<Categories />} />
+              <Route path="/yazarlar" element={<Authors />} />
+              <Route path="/kose-yazilari" element={<BlogPosts />} />
+              <Route path="/iletisim" element={<Contact />} />
+              <Route path="/admin" element={<Admin />} />
             </Routes>
           </div>
         </main>

@@ -42,11 +42,11 @@ const Header = () => {
             <Link to="/kose-yazilari" className="text-blue-700 hover:text-blue-900 text-sm font-medium transition-colors duration-200">
               Köşe Yazıları
             </Link>
-            <Link to="/hakkimizda" className="text-blue-700 hover:text-blue-900 text-sm font-medium transition-colors duration-200">
-              Hakkımızda
-            </Link>
             <Link to="/iletisim" className="text-blue-700 hover:text-blue-900 text-sm font-medium transition-colors duration-200">
               İletişim
+            </Link>
+            <Link to="/admin" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors duration-200">
+              Yönetim
             </Link>
           </nav>
 
@@ -105,16 +105,16 @@ const Header = () => {
                 Köşe Yazıları
               </Link>
               <Link 
-                to="/hakkimizda" 
-                className="block px-4 py-2.5 rounded-lg text-base font-medium text-blue-700 hover:text-blue-900 hover:bg-blue-50 transition-colors duration-200"
-              >
-                Hakkımızda
-              </Link>
-              <Link 
                 to="/iletisim" 
                 className="block px-4 py-2.5 rounded-lg text-base font-medium text-blue-700 hover:text-blue-900 hover:bg-blue-50 transition-colors duration-200"
               >
                 İletişim
+              </Link>
+              <Link 
+                to="/admin" 
+                className="block px-4 py-2.5 rounded-lg text-base font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200"
+              >
+                Yönetim
               </Link>
               <form onSubmit={handleSearch} className="px-4 py-2">
                 <div className="relative">
