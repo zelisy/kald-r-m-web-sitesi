@@ -2,10 +2,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Categories from './components/Categories';
+import CategoryDetail from './components/CategoryDetail';
 import Authors from './components/Authors';
 import BlogPosts from './components/BlogPosts';
 import Contact from './components/Contact';
 import AdminPanel from './components/AdminPanel';
+import Login from './components/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 import './App.css';
 
 const HomePage = () => {
@@ -81,10 +84,19 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />
               <Route path="/kategoriler" element={<Categories />} />
+              <Route path="/kategoriler/:categoryName" element={<CategoryDetail />} />
               <Route path="/yazarlar" element={<Authors />} />
               <Route path="/kose-yazilari" element={<BlogPosts />} />
               <Route path="/iletisim" element={<Contact />} />
-              <Route path="/admin" element={<AdminPanel />} />
+              <Route path="/login" element={<Login />} />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <AdminPanel />
+                  </ProtectedRoute>
+                } 
+              />
             </Routes>
           </div>
         </main>
