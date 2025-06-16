@@ -158,8 +158,8 @@ const AdminPanel = () => {
   };
 
   const closeMessageModal = () => {
-    setShowMessageModal(false);
-    setSelectedMessage(null);
+        setShowMessageModal(false);
+        setSelectedMessage(null);
   };
 
   const handleInputChange = (e) => {
@@ -343,16 +343,16 @@ const AdminPanel = () => {
       <div className="mb-8">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
-            <button
-              onClick={() => setActiveTab('books')}
+          <button
+            onClick={() => setActiveTab('books')}
               className={`${
                 activeTab === 'books'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Kitaplar
-            </button>
+          >
+            Kitaplar
+          </button>
             <button
               onClick={() => setActiveTab('blog')}
               className={`${
@@ -363,21 +363,21 @@ const AdminPanel = () => {
             >
               Köşe Yazıları
             </button>
-            <button
-              onClick={() => setActiveTab('messages')}
+          <button
+            onClick={() => setActiveTab('messages')}
               className={`${
                 activeTab === 'messages'
                   ? 'border-blue-500 text-blue-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm relative`}
-            >
-              Mesajlar
+          >
+            Mesajlar
               {messages.filter(msg => msg.status === 'unread').length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                   {messages.filter(msg => msg.status === 'unread').length}
-                </span>
-              )}
-            </button>
+              </span>
+            )}
+          </button>
           </nav>
         </div>
       </div>
