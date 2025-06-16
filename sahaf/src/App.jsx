@@ -16,11 +16,25 @@ const HomePage = () => {
   return (
     <div className="space-y-12">
       {/* Hero Section */}
-      <section className="text-center py-12 bg-blue-50 rounded-xl">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Kaldırım Sahaf'a Hoş Geldiniz</h1>
-        <p className="text-lg text-gray-800 max-w-2xl mx-auto">
-          Kitap tutkunları için özenle seçilmiş eserler ve nadide kitaplar sunan sahaf dükkanımızda sizleri bekliyoruz.
-        </p>
+      <section className="relative py-16 bg-blue-50 rounded-xl overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div className="text-center md:text-left">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">Kaldırım Sahaf'a Hoş Geldiniz</h1>
+              <p className="text-lg text-gray-800">
+                Kitap tutkunları için özenle seçilmiş eserler ve nadide kitaplar sunan sahaf dükkanımızda sizleri bekliyoruz.
+              </p>
+            </div>
+            <div className="flex justify-center md:justify-end">
+              <img 
+                src="/oku-getir.jpg" 
+                alt="Oku Getir" 
+                className="w-full max-w-md h-auto rounded-lg shadow-lg object-cover"
+                style={{ maxHeight: '400px' }}
+              />
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* Hakkımızda Section */}
