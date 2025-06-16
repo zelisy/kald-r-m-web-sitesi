@@ -21,15 +21,6 @@ const AdminPanel = () => {
     publisher: ''
   });
   const [editingBook, setEditingBook] = useState(null);
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [blogFormData, setBlogFormData] = useState({
-    title: '',
-    author: '',
-    excerpt: '',
-    content: '',
-    readTime: '',
-    date: new Date().toISOString().split('T')[0]
-  });
   const navigate = useNavigate();
 
   // Varsayılan kategoriler
@@ -227,40 +218,6 @@ const AdminPanel = () => {
     navigate('/login');
   };
 
-  const handleBlogSubmit = (e) => {
-    e.preventDefault();
-    const newPost = {
-      id: Date.now(),
-      ...blogFormData,
-      date: new Date().toLocaleDateString('tr-TR')
-    };
-    setBlogPosts([...blogPosts, newPost]);
-    setBlogFormData({
-      title: '',
-      author: '',
-      excerpt: '',
-      content: '',
-      readTime: '',
-      date: new Date().toISOString().split('T')[0]
-    });
-  };
-
-  const handleBlogDelete = (postId) => {
-    setBlogPosts(blogPosts.filter(post => post.id !== postId));
-  };
-
-  const handleBlogEdit = (post) => {
-    setBlogFormData(post);
-  };
-
-  const handleBlogChange = (e) => {
-    const { name, value } = e.target;
-    setBlogFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   // Kitap formu içindeki kategori seçimi kısmını güncelle
   const renderBookForm = () => (
     <div className="relative">
@@ -319,506 +276,287 @@ const AdminPanel = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Yönetici Paneli</h1>
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
-        >
-          Çıkış Yap
-        </button>
-      </div>
+      <div className="max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">Yönetici Paneli</h1>
+          <button
+            onClick={handleLogout}
+            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+          >
+            Çıkış Yap
+          </button>
+        </div>
 
-      <div className="mb-8">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
+        {/* Tab Menüsü */}
+        <div className="flex space-x-4 mb-8 border-b border-gray-200">
           <button
             onClick={() => setActiveTab('books')}
-              className={`${
-                activeTab === 'books'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
+            className={`px-4 py-2 font-medium ${
+              activeTab === 'books'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-600 hover:text-gray-800'
+            }`}
           >
             Kitaplar
           </button>
-            <button
-              onClick={() => setActiveTab('blog')}
-              className={`${
-                activeTab === 'blog'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
-            >
-              Köşe Yazıları
-          </button>
           <button
             onClick={() => setActiveTab('messages')}
-              className={`${
-                activeTab === 'messages'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm relative`}
+            className={`px-4 py-2 font-medium relative ${
+              activeTab === 'messages'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-600 hover:text-gray-800'
+            }`}
           >
             Mesajlar
-              {messages.filter(msg => msg.status === 'unread').length > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {messages.filter(msg => msg.status === 'unread').length}
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {unreadCount}
               </span>
             )}
           </button>
-          </nav>
         </div>
-      </div>
 
-      {activeTab === 'books' && (
-        <div className="space-y-8">
-          {/* Kitap Ekleme/Düzenleme Formu */}
-          <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-            <h2 className="text-xl font-semibold mb-4">
-              {editingBook ? 'Kitap Düzenle' : 'Yeni Kitap Ekle'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleInputChange}
-                  placeholder="Kitap Adı"
-                  className="border p-2 rounded"
-                  required
-                />
-                <input
-                  type="text"
-                  name="author"
-                  value={formData.author}
-                  onChange={handleInputChange}
-                  placeholder="Yazar"
-                  className="border p-2 rounded"
-                  required
-                />
-                <input
-                  type="number"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleInputChange}
-                  placeholder="Fiyat"
-                  className="border p-2 rounded"
-                  required
-                />
-                {renderBookForm()}
-                <input
-                  type="number"
-                  name="publishYear"
-                  value={formData.publishYear}
-                  onChange={handleInputChange}
-                  placeholder="Yayın Yılı"
-                  className="border p-2 rounded"
-                  min="1000"
-                  max={new Date().getFullYear()}
-                />
-                <input
-                  type="text"
-                  name="publisher"
-                  value={formData.publisher}
-                  onChange={handleInputChange}
-                  placeholder="Yayınevi"
-                  className="border p-2 rounded"
-                />
-                <input
-                  type="text"
-                  name="imageUrl"
-                  value={formData.imageUrl}
-                  onChange={handleInputChange}
-                  placeholder="Resim URL"
-                  className="border p-2 rounded md:col-span-2"
-                  required
-                />
-              </div>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Kitap Açıklaması"
-                className="border p-2 rounded w-full"
-                rows="4"
-                required
-              />
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
-                  {editingBook ? 'Güncelle' : 'Ekle'}
-                </button>
-                {editingBook && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditingBook(null);
-                      setFormData({
-                        title: '',
-                        author: '',
-                        price: '',
-                        description: '',
-                        imageUrl: '',
-                        category: '',
-                        publishYear: '',
-                        publisher: ''
-                      });
-                    }}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
-                  >
-                    İptal
-                  </button>
-                )}
-              </div>
-            </form>
-          </div>
-
-          {/* Kitaplar Listesi */}
-          <div className="bg-white rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold p-6 border-b">Kitap Listesi</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kitap Adı</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Yazar</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fiyat</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Yayın Yılı</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Yayınevi</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {books.map((book) => (
-                    <tr key={book.id}>
-                      <td className="px-6 py-4 whitespace-nowrap">{book.title}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{book.author}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{book.price} TL</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{book.category}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{book.publishYear || '-'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{book.publisher || '-'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <button
-                          onClick={() => handleEdit(book)}
-                          className="text-blue-600 hover:text-blue-900 mr-4"
-                        >
-                          Düzenle
-                        </button>
-                        <button
-                          onClick={() => handleDelete(book.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Sil
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {activeTab === 'blog' && (
-        <div className="space-y-8">
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
-              {blogFormData.id ? 'Köşe Yazısını Düzenle' : 'Yeni Köşe Yazısı Ekle'}
-            </h2>
-            <form onSubmit={handleBlogSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="blogTitle" className="block text-sm font-medium text-gray-700">
-                  Başlık
-                </label>
-                <input
-                  type="text"
-                  id="blogTitle"
-                  name="title"
-                  value={blogFormData.title}
-                  onChange={handleBlogChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="blogAuthor" className="block text-sm font-medium text-gray-700">
-                  Yazar
-                </label>
-                <input
-                  type="text"
-                  id="blogAuthor"
-                  name="author"
-                  value={blogFormData.author}
-                  onChange={handleBlogChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="blogExcerpt" className="block text-sm font-medium text-gray-700">
-                  Özet
-                </label>
+        {/* Kitaplar Tab */}
+        {activeTab === 'books' && (
+          <div className="space-y-8">
+            {/* Kitap Formu */}
+            <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+              <h2 className="text-xl font-semibold mb-4">
+                {editingBook ? 'Kitap Düzenle' : 'Yeni Kitap Ekle'}
+              </h2>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    name="title"
+                    value={formData.title}
+                    onChange={handleInputChange}
+                    placeholder="Kitap Adı"
+                    className="border p-2 rounded"
+                    required
+                  />
+                  <input
+                    type="text"
+                    name="author"
+                    value={formData.author}
+                    onChange={handleInputChange}
+                    placeholder="Yazar"
+                    className="border p-2 rounded"
+                    required
+                  />
+                  <input
+                    type="number"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    placeholder="Fiyat"
+                    className="border p-2 rounded"
+                    required
+                  />
+                  {renderBookForm()}
+                  <input
+                    type="number"
+                    name="publishYear"
+                    value={formData.publishYear}
+                    onChange={handleInputChange}
+                    placeholder="Yayın Yılı"
+                    className="border p-2 rounded"
+                    min="1000"
+                    max={new Date().getFullYear()}
+                  />
+                  <input
+                    type="text"
+                    name="publisher"
+                    value={formData.publisher}
+                    onChange={handleInputChange}
+                    placeholder="Yayınevi"
+                    className="border p-2 rounded"
+                  />
+                  <input
+                    type="text"
+                    name="imageUrl"
+                    value={formData.imageUrl}
+                    onChange={handleInputChange}
+                    placeholder="Resim URL"
+                    className="border p-2 rounded md:col-span-2"
+                    required
+                  />
+                </div>
                 <textarea
-                  id="blogExcerpt"
-                  name="excerpt"
-                  value={blogFormData.excerpt}
-                  onChange={handleBlogChange}
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Kitap Açıklaması"
+                  className="border p-2 rounded w-full"
+                  rows="4"
                   required
-                  rows={3}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 />
-              </div>
-
-              <div>
-                <label htmlFor="blogContent" className="block text-sm font-medium text-gray-700">
-                  İçerik
-                </label>
-                <textarea
-                  id="blogContent"
-                  name="content"
-                  value={blogFormData.content}
-                  onChange={handleBlogChange}
-                  required
-                  rows={6}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="blogReadTime" className="block text-sm font-medium text-gray-700">
-                  Okuma Süresi (dakika)
-                </label>
-                <input
-                  type="number"
-                  id="blogReadTime"
-                  name="readTime"
-                  value={blogFormData.readTime}
-                  onChange={handleBlogChange}
-                  required
-                  min="1"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="blogDate" className="block text-sm font-medium text-gray-700">
-                  Tarih
-                </label>
-                <input
-                  type="date"
-                  id="blogDate"
-                  name="date"
-                  value={blogFormData.date}
-                  onChange={handleBlogChange}
-                  required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="flex justify-end space-x-4">
-                {blogFormData.id && (
+                <div className="flex gap-4">
                   <button
-                    type="button"
-                    onClick={() => {
-                      setBlogFormData({
-                        title: '',
-                        author: '',
-                        excerpt: '',
-                        content: '',
-                        readTime: '',
-                        date: new Date().toISOString().split('T')[0]
-                      });
-                    }}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    type="submit"
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                   >
-                    İptal
+                    {editingBook ? 'Güncelle' : 'Ekle'}
                   </button>
-                )}
-                <button
-                  type="submit"
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                >
-                  {blogFormData.id ? 'Güncelle' : 'Ekle'}
-                </button>
+                  {editingBook && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingBook(null);
+                        setFormData({
+                          title: '',
+                          author: '',
+                          price: '',
+                          description: '',
+                          imageUrl: '',
+                          category: '',
+                          publishYear: '',
+                          publisher: ''
+                        });
+                      }}
+                      className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                    >
+                      İptal
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+
+            {/* Kitaplar Listesi */}
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-xl font-semibold text-gray-800">Kitaplar Listesi</h2>
               </div>
-            </form>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800">Köşe Yazıları Listesi</h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Başlık</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Yazar</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Okuma Süresi</th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {blogPosts.map((post) => (
-                    <tr key={post.id}>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{post.title}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{post.author}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(post.date).toLocaleDateString('tr-TR')}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{post.readTime} dk</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          onClick={() => handleBlogEdit(post)}
-                          className="text-blue-600 hover:text-blue-900 mr-4"
-                        >
-                          Düzenle
-                        </button>
-                        <button
-                          onClick={() => handleBlogDelete(post.id)}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Sil
-                        </button>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kitap</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Yazar</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fiyat</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {books.map((book) => (
+                      <tr key={book.id}>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            {book.imageUrl && (
+                              <img
+                                src={book.imageUrl}
+                                alt={book.title}
+                                className="h-10 w-10 rounded object-cover mr-3"
+                              />
+                            )}
+                            <div className="text-sm font-medium text-gray-900">{book.title}</div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.author}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.category}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{book.price} TL</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <button
+                            onClick={() => handleEdit(book)}
+                            className="text-blue-600 hover:text-blue-900 mr-4"
+                          >
+                            Düzenle
+                          </button>
+                          <button
+                            onClick={() => handleDelete(book.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Sil
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {activeTab === 'messages' && (
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-800">Gelen Mesajlar</h2>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Durum</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tür</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gönderen</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Konu</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tarih</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">İşlemler</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {messages.map((message) => (
-                  <tr 
-                    key={message.id}
-                    className={`cursor-pointer hover:bg-gray-50 ${
-                      message.status === 'unread' ? 'bg-blue-50' : ''
-                    }`}
-                    onClick={() => handleMessageClick(message)}
-                  >
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        message.status === 'unread' 
-                          ? 'bg-blue-100 text-blue-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {message.status === 'unread' ? 'Yeni' : 'Okundu'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        message.type === 'complaint' 
-                          ? 'bg-red-100 text-red-800'
-                          : message.type === 'suggestion'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {message.type === 'complaint' ? 'Şikayet' : 
-                         message.type === 'suggestion' ? 'Öneri' : 'Talep'}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="font-medium text-gray-900">{message.name}</div>
-                        <div className="text-sm text-gray-500">{message.email}</div>
+        {/* Mesajlar Tab */}
+        {activeTab === 'messages' && (
+          <div className="space-y-8">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-xl font-semibold text-gray-800">İletişim Mesajları</h2>
+              </div>
+              <div className="divide-y divide-gray-200">
+                {messages.length > 0 ? (
+                  messages.map((message) => (
+                    <div
+                      key={message.id}
+                      className={`p-6 cursor-pointer hover:bg-gray-50 transition-colors ${
+                        message.status === 'unread' ? 'bg-blue-50' : ''
+                      }`}
+                      onClick={() => handleMessageClick(message)}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="text-lg font-medium text-gray-900">{message.name}</h3>
+                          <p className="text-sm text-gray-500 mt-1">{message.email}</p>
+                        </div>
+                        <span className="text-sm text-gray-500">
+                          {new Date(message.date).toLocaleDateString('tr-TR')}
+                        </span>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {message.subject}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {message.date}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteMessage(message.id);
-                        }}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        Sil
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Mesaj Detay Modalı */}
-      {showMessageModal && selectedMessage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800 mb-2">{selectedMessage.subject}</h2>
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
-                    <span>{selectedMessage.name}</span>
-                    <span>•</span>
-                    <span>{selectedMessage.email}</span>
-                    <span>•</span>
-                    <span>{selectedMessage.date}</span>
+                      <p className="mt-2 text-gray-600 line-clamp-2">{message.message}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="p-6 text-center text-gray-500">
+                    Henüz mesaj bulunmuyor.
                   </div>
-                  <div className="mt-2">
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      selectedMessage.type === 'complaint' 
-                        ? 'bg-red-100 text-red-800'
-                        : selectedMessage.type === 'suggestion'
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-yellow-100 text-yellow-800'
-                    }`}>
-                      {selectedMessage.type === 'complaint' ? 'Şikayet' : 
-                       selectedMessage.type === 'suggestion' ? 'Öneri' : 'Talep'}
-                    </span>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mesaj Detay Modalı */}
+        {showMessageModal && selectedMessage && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-2xl w-full">
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-800">{selectedMessage.name}</h2>
+                    <p className="text-gray-600">{selectedMessage.email}</p>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => handleDeleteMessage(selectedMessage.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      Sil
+                    </button>
+                    <button
+                      onClick={closeMessageModal}
+                      className="text-gray-500 hover:text-gray-700"
+                    >
+                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
-                <button
-                  onClick={closeMessageModal}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <div className="prose max-w-none">
-                <p className="text-gray-600 whitespace-pre-line">{selectedMessage.message}</p>
+                <div className="mt-4">
+                  <p className="text-gray-600 whitespace-pre-wrap">{selectedMessage.message}</p>
+                </div>
+                <div className="mt-4 text-sm text-gray-500">
+                  {new Date(selectedMessage.date).toLocaleString('tr-TR')}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };

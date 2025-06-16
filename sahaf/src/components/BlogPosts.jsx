@@ -169,15 +169,30 @@ const BlogPosts = () => {
                           <p className="text-gray-900 font-medium">{post.author}</p>
                         </div>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handlePostClick(post);
-                        }}
-                        className="text-blue-600 hover:text-blue-800 font-medium"
-                      >
-                        Devamını Oku
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePostClick(post);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                          Devamını Oku
+                        </button>
+                        {isAdmin && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (window.confirm('Bu köşe yazısını silmek istediğinizden emin misiniz?')) {
+                                handleBlogDelete(post.id);
+                              }
+                            }}
+                            className="text-red-600 hover:text-red-800 font-medium"
+                          >
+                            Sil
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
