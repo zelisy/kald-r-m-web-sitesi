@@ -86,7 +86,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/kitaplarimiz" element={<Books />} />
               <Route path="/kategoriler" element={<Categories />} />
-              <Route path="/kategoriler/:categoryName" element={<CategoryDetail />} />
+              <Route path="/kategoriler/:categoryName" element={<Categories />} />
               <Route path="/yazarlar" element={<Authors />} />
               <Route path="/kose-yazilari" element={<BlogPosts />} />
               <Route path="/iletisim" element={<Contact />} />

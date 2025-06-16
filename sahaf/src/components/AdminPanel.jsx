@@ -263,68 +263,57 @@ const AdminPanel = () => {
 
   // Kitap formu içindeki kategori seçimi kısmını güncelle
   const renderBookForm = () => (
-    <div className="space-y-6">
-      {/* ... other form fields ... */}
-      
-      <div className="relative">
-        <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
-          Kategori
-        </label>
-        <div className="relative">
-          <button
-            type="button"
-            onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-            className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          >
-            <div className="flex items-center">
-              {formData.category ? (
-                <>
-                  <span className="text-xl mr-2">{defaultCategoryIcons[formData.category] || '📚'}</span>
-                  <span>{formData.category}</span>
-                </>
-              ) : (
-                <span className="text-gray-500">Kategori Seçin</span>
-              )}
-            </div>
-            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
+    <div className="relative">
+      <button
+        type="button"
+        onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+        className="w-full flex items-center justify-between px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-left focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      >
+        <div className="flex items-center">
+          {formData.category ? (
+            <>
+              <span className="text-xl mr-2">{defaultCategoryIcons[formData.category] || '📚'}</span>
+              <h3 className="font-medium text-gray-900">
+                {formData.category}
+                {existingCategories.find(c => c.name === formData.category)?.count > 0 && <span className="text-gray-500 ml-1">({existingCategories.find(c => c.name === formData.category)?.count})</span>}
+              </h3>
+            </>
+          ) : (
+            <span className="text-gray-500">Kategori Seçin</span>
+          )}
+        </div>
+        <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
 
-          {showCategoryDropdown && (
-            <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-              {existingCategories.length > 0 ? (
-                existingCategories.map((category) => (
-                  <button
-                    key={category.name}
-                    type="button"
-                    onClick={() => {
-                      handleInputChange({ target: { name: 'category', value: category.name } });
-                      setShowCategoryDropdown(false);
-                    }}
-                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                  >
-                    <span className="text-xl mr-2">{category.icon}</span>
-                    <span className="flex-1">{category.name}</span>
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                      {category.count} kitap
-                    </span>
-                  </button>
-                ))
-              ) : (
-                <div className="px-4 py-2 text-sm text-gray-500">
-                  Henüz kategori bulunmuyor
-                </div>
-              )}
+      {showCategoryDropdown && (
+        <div className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
+          {existingCategories.length > 0 ? (
+            existingCategories.map((category) => (
+              <button
+                key={category.name}
+                type="button"
+                onClick={() => {
+                  handleInputChange({ target: { name: 'category', value: category.name } });
+                  setShowCategoryDropdown(false);
+                }}
+                className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+              >
+                <span className="text-xl mr-2">{category.icon}</span>
+                <span className="flex-1">{category.name}</span>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                  {category.count} kitap
+                </span>
+              </button>
+            ))
+          ) : (
+            <div className="px-4 py-2 text-sm text-gray-500">
+              Henüz kategori bulunmuyor
             </div>
           )}
         </div>
-        <p className="mt-2 text-sm text-gray-500">
-          Mevcut kategorilerden birini seçin
-        </p>
-      </div>
-
-      {/* ... other form fields ... */}
+      )}
     </div>
   );
 
@@ -362,7 +351,7 @@ const AdminPanel = () => {
               } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
             >
               Köşe Yazıları
-            </button>
+          </button>
           <button
             onClick={() => setActiveTab('messages')}
               className={`${
