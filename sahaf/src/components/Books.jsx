@@ -8,6 +8,8 @@ const Books = () => {
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('tümü');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchBooks();
@@ -39,6 +41,16 @@ const Books = () => {
                          book.author.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  const handleBookClick = (book) => {
+    setSelectedBook(book);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedBook(null);
+  };
 
   if (loading) {
     return (
@@ -94,6 +106,75 @@ const Books = () => {
         </div>
       </div>
 
+      {/* Kitap Detay Modalı */}
+      {showModal && selectedBook && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="relative">
+              {selectedBook.imageUrl ? (
+                <img
+                  src={selectedBook.imageUrl}
+                  alt={selectedBook.title}
+                  className="w-full h-64 object-cover rounded-t-xl"
+                />
+              ) : (
+                <div className="w-full h-64 bg-gray-100 flex items-center justify-center rounded-t-xl">
+                  <span className="text-gray-400">Kapak görseli yok</span>
+                </div>
+              )}
+              <button
+                onClick={closeModal}
+                className="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors duration-200"
+              >
+                <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedBook.title}</h2>
+                  <p className="text-gray-600 font-medium">Yazar: {selectedBook.author}</p>
+                </div>
+                <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                  {selectedBook.category}
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-500">Yayın Yılı</p>
+                    <p className="font-medium">{selectedBook.publishYear || 'Belirtilmemiş'}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500">Yayınevi</p>
+                    <p className="font-medium">{selectedBook.publisher || 'Belirtilmemiş'}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-gray-500 mb-2">Açıklama</p>
+                  <p className="text-gray-700">{selectedBook.description}</p>
+                </div>
+
+                <div className="pt-4 border-t border-gray-100">
+                  <p className="text-2xl font-bold text-blue-600">
+                    {new Intl.NumberFormat('tr-TR', {
+                      style: 'currency',
+                      currency: 'TRY',
+                      minimumFractionDigits: 2
+                    }).format(selectedBook.price)}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Kitaplar Listesi */}
       {filteredBooks.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -135,6 +216,7 @@ const Books = () => {
                     }).format(book.price)}
                   </span>
                   <button 
+                    onClick={() => handleBookClick(book)}
                     className="bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium 
                              hover:bg-blue-700 transform hover:-translate-y-0.5 transition-all duration-200
                              focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
