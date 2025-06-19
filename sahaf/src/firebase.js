@@ -1,20 +1,17 @@
-// /src/firebase.js
-
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC7jzuuLuXkdn5ONxM-JWqyti-YqWD-xaY",
-  authDomain: "sahaf-918d6.firebaseapp.com",
-  projectId: "sahaf-918d6",
-  storageBucket: "sahaf-918d6.firebasestorage.app",
-  messagingSenderId: "97622790826",
-  appId: "1:97622790826:web:2240bf0db89e17e9beb6d3"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 const app = initializeApp(firebaseConfig);
 
-// 🔽 Burada eksik olan export'lar vardı, ekledik
 export const db = getFirestore(app);
 export const storage = getStorage(app);

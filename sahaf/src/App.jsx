@@ -27,8 +27,8 @@ const HomePage = () => {
             </div>
             <div className="flex justify-center md:justify-end">
               <img 
-                src="/oku-getir.jpg" 
-                alt="Oku Getir" 
+                src="/kaldırım-dükkan.jpg" 
+                alt="Kaldırım Dükkan" 
                 className="w-full max-w-md h-auto rounded-lg shadow-lg object-cover"
                 style={{ maxHeight: '400px' }}
               />
