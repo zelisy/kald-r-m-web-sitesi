@@ -10,7 +10,14 @@ import AdminPanel from './components/AdminPanel';
 import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import Books from './components/Books';
+import Slider from './components/Slider';
 import './App.css';
+
+const sliderImages = [
+  '/kaldırım-dükkan.jpg',
+  '/oku-getir.jpg',
+  '/logo 2.jpg',
+];
 
 const HomePage = () => {
   return (
@@ -26,12 +33,7 @@ const HomePage = () => {
               </p>
             </div>
             <div className="flex justify-center md:justify-end">
-              <img 
-                src="/kaldırım-dükkan.jpg" 
-                alt="Kaldırım Dükkan" 
-                className="w-full max-w-md h-auto rounded-lg shadow-lg object-cover"
-                style={{ maxHeight: '400px' }}
-              />
+              <Slider images={sliderImages} />
             </div>
           </div>
         </div>
