@@ -72,8 +72,7 @@ const Contact = () => {
       mobile: "90 507 857 29 35"
     },
     email: {
-      info: "info@kaldirimsahaf.com",
-      orders: "siparis@kaldirimsahaf.com"
+      info: "aussymann06@gmail.com",
     },
     workingHours: {
       weekdays: "09:00 - 19:00",
