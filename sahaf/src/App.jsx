@@ -11,6 +11,43 @@ import Login from './components/Login';
 import ProtectedRoute from './components/ProtectedRoute';
 import Books from './components/Books';
 import './App.css';
+import { useState } from 'react';
+
+const sliderImages = [
+  '/kaldırım-dükkan.jpg',
+  '/adilhan.jpeg',
+  '/oku-getir.jpg',
+];
+
+function ImageSlider() {
+  const [current, setCurrent] = useState(0);
+  const length = sliderImages.length;
+
+  const nextSlide = () => setCurrent((prev) => (prev + 1) % length);
+  const prevSlide = () => setCurrent((prev) => (prev - 1 + length) % length);
+
+  return (
+    <div className="relative w-full max-w-md mx-auto">
+      <button onClick={prevSlide} className="absolute left-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10">
+        <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+      </button>
+      <img
+        src={sliderImages[current]}
+        alt={`Slider ${current + 1}`}
+        className="w-full h-80 object-cover rounded-lg shadow-lg"
+        style={{ maxHeight: '400px' }}
+      />
+      <button onClick={nextSlide} className="absolute right-2 top-1/2 -translate-y-1/2 bg-white bg-opacity-70 rounded-full p-2 shadow hover:bg-opacity-100 z-10">
+        <svg className="w-6 h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+      </button>
+      <div className="flex justify-center mt-2 space-x-2">
+        {sliderImages.map((_, idx) => (
+          <span key={idx} className={`inline-block w-2 h-2 rounded-full ${idx === current ? 'bg-blue-700' : 'bg-blue-200'}`}></span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const HomePage = () => {
   return (
@@ -26,12 +63,7 @@ const HomePage = () => {
               </p>
             </div>
             <div className="flex justify-center md:justify-end">
-              <img 
-                src="/kaldırım-dükkan.jpg" 
-                alt="Kaldırım Dükkan" 
-                className="w-full max-w-md h-auto rounded-lg shadow-lg object-cover"
-                style={{ maxHeight: '400px' }}
-              />
+              <ImageSlider />
             </div>
           </div>
         </div>
