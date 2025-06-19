@@ -16,9 +16,7 @@ import './App.css';
 const sliderImages = [
   '/kaldırım-dükkan.jpg',
   '/oku-getir.jpg',
-  '/logo 2.jpg',
-  '/kaldırım.jpg',
-  '/adilhan.jpg',
+  
 ];
 
 const HomePage = () => {

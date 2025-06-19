@@ -1,4 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
+
+const BookCard = ({ book }) => (
+  <div className="min-w-[180px] max-w-[180px] bg-white rounded-lg shadow p-3 flex flex-col items-center border border-blue-100 mr-4">
+    <img
+      src={book.imageUrl || '/kaldırım-dükkan.jpg'}
+      alt={book.title}
+      className="w-24 h-32 object-cover rounded mb-2 border"
+    />
+    <div className="w-full text-center">
+      <h3 className="text-sm font-bold text-gray-900 truncate">{book.title}</h3>
+      <p className="text-xs text-gray-600 truncate">{book.author}</p>
+    </div>
+  </div>
+);
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +29,25 @@ const Contact = () => {
     type: '',
     message: ''
   });
+
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    const loadBooks = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'books'));
+        const firebaseBooks = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const localBooks = JSON.parse(localStorage.getItem('books') || '[]');
+        // Combine and deduplicate by id
+        const allBooks = [...firebaseBooks, ...localBooks];
+        const uniqueBooks = Array.from(new Map(allBooks.map(book => [book.id, book])).values());
+        setBooks(uniqueBooks.slice(0, 8));
+      } catch (error) {
+        setBooks([]);
+      }
+    };
+    loadBooks();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -299,6 +334,18 @@ const Contact = () => {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+
+        {/* Kitaplarım - Yatay Scroll */}
+        <div className="mt-12">
+          <h2 className="text-xl font-bold text-gray-800 mb-4">Kitaplarımızdan Seçmeler</h2>
+          <div className="flex overflow-x-auto pb-2 hide-scrollbar">
+            {books.length > 0 ? books.map(book => (
+              <BookCard key={book.id} book={book} />
+            )) : (
+              <div className="text-gray-500">Kitap bulunamadı.</div>
+            )}
           </div>
         </div>
       </div>
