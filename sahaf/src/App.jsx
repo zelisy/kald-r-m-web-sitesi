@@ -12,6 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Books from './components/Books';
 import Slider from './components/Slider';
 import './App.css';
+import { useEffect, useState } from 'react';
 
 const sliderImages = [
   '/kaldırım-dükkan.jpg',
@@ -20,6 +21,13 @@ const sliderImages = [
 ];
 
 const HomePage = () => {
+  const [books, setBooks] = useState([]);
+
+  useEffect(() => {
+    const localBooks = JSON.parse(localStorage.getItem('books') || '[]');
+    setBooks(localBooks);
+  }, []);
+
   return (
     <div className="space-y-12">
       {/* Hero Section */}
@@ -36,6 +44,48 @@ const HomePage = () => {
               <Slider images={sliderImages} />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Kitaplarım - Yatay Scroll */}
+      <section className="bg-white py-8 rounded-xl shadow-sm border border-blue-100">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Kitaplarım</h2>
+          {books.length > 0 ? (
+            <div className="flex space-x-6 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-blue-50">
+              {books.map((book) => (
+                <div
+                  key={book.id || book.title}
+                  className="min-w-[220px] max-w-xs bg-blue-50 border border-blue-100 rounded-xl shadow hover:shadow-lg transition-all duration-300 flex-shrink-0"
+                >
+                  <div className="relative">
+                    {book.imageUrl ? (
+                      <img
+                        src={book.imageUrl}
+                        alt={book.title}
+                        className="w-full h-40 object-cover rounded-t-xl"
+                      />
+                    ) : (
+                      <div className="w-full h-40 bg-gray-100 flex items-center justify-center rounded-t-xl">
+                        <span className="text-gray-400">Kapak görseli yok</span>
+                      </div>
+                    )}
+                    <div className="absolute top-3 right-3">
+                      <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                        {book.category}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-gray-900 text-lg truncate mb-1">{book.title}</h3>
+                    <p className="text-gray-600 text-sm truncate">{book.author}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-gray-500 text-center py-8">Henüz kitap eklemediniz.</div>
+          )}
         </div>
       </section>
 
